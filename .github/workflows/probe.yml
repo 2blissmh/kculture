@@ -14,11 +14,12 @@ jobs:
           SEOUL_RAW: ${{ secrets.SEOUL_API_KEY }}
           S: ${{ secrets.SEOUL_API_KEY }}
         run: |
+          set +e
           TOUR=$(printf '%s' "$TOUR_RAW" | tr -d '[:space:]'); SEOUL=$(printf '%s' "$SEOUL_RAW" | tr -d '[:space:]')
           echo "TOUR 원래 길이 ${#TOUR_RAW} → 공백 제거 후 ${#TOUR}"
           enc() { python3 -c "import urllib.parse,sys;print(urllib.parse.quote(sys.argv[1],safe=''))" "$1"; }
           K=$(enc "$TOUR")
-          probe() { echo "== $1"; curl -s -m 30 -o /tmp/b -w "HTTP %{http_code} %{time_total}s\n" "$2" || echo "curl 실패 $?"; head -c 700 /tmp/b; echo; }
+          probe() { echo "== $1"; curl -s -m 60 --retry 2 -o /tmp/b -w "HTTP %{http_code} %{time_total}s\n" "$2" || echo "curl 실패 $?"; head -c 700 /tmp/b; echo; }
           probe "Tour festival" "https://apis.data.go.kr/B551011/KorService2/searchFestival2?serviceKey=$K&MobileOS=ETC&MobileApp=KC&_type=json&numOfRows=1&eventStartDate=20261001"
           probe "Tour detailIntro" "https://apis.data.go.kr/B551011/KorService2/detailIntro2?serviceKey=$K&MobileOS=ETC&MobileApp=KC&_type=json&contentId=$(python3 -c "import json;print(json.load(open('/tmp/b'))['response']['body']['items']['item'][0]['contentid'])" 2>/dev/null)&contentTypeId=15"
           probe "한눈에 period2" "https://apis.data.go.kr/B553457/cultureinfo/period2?serviceKey=$K&numOfrows=2&PageNo=1&from=20261016&to=20261031"
