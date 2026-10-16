@@ -58,9 +58,9 @@
 6. `https://<내아이디>.github.io/kculture/`에 접속하면 위젯 미리보기가 나옵니다.
 
 ### ③ 아임웹에 붙여넣기
-1. `widget/imweb-widget.html`을 열고 위쪽의 아래 줄에 데이터 주소를 넣습니다.
+1. `widget/imweb-widget.html`에는 이 저장소의 데이터 주소가 이미 들어 있습니다. 저장소를 바꾸면 아래 줄의 주소도 바꿔 주세요.
    ```html
-   <div id="kc-app" data-data-url="https://<내아이디>.github.io/kculture/data/events.json"></div>
+   <div id="kc-app" data-data-url="https://2blissmh.github.io/kculture/data/events.json"></div>
    ```
 2. 아임웹 디자인 모드에서 원하는 섹션에 **위젯 추가 → 코드(HTML)** 위젯을 넣고, 파일 내용 **전체**를 붙여넣습니다.
 3. 섹션 너비는 "넓게(전체)"를 권장합니다. 위젯이 최대 1200px 안에서 반응형으로 맞춰집니다.

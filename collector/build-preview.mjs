@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const widget = await readFile(join(ROOT, 'widget', 'imweb-widget.html'), 'utf8');
 const url = process.argv.includes('--demo') ? '' : 'data/events.json';
-const body = widget.replace('data-data-url=""', `data-data-url="${url}"`);
+const body = widget.replace(/data-data-url="[^"]*"/, `data-data-url="${url}"`);
 const html = `<!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>전국 문화생활</title><style>body{margin:0;background:#fff}</style></head>
