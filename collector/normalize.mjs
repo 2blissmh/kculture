@@ -41,6 +41,11 @@ export function normSido(s) {
   const str = String(s).trim() + ' ';
   // "경기도 광주시"는 경기로 — 광주광역시와 구분하기 위해 경기를 먼저 확인
   if (str.startsWith('경기')) return '경기';
+  // 전남광주통합특별시: 옛 광주광역시 자치구면 광주, 나머지는 전남으로 나눠 기존 필터를 유지
+  if (/^(전남광주|광주전남)/.test(str)) {
+    const gu = str.trim().split(/\s+/)[1] || '';
+    return /^(광주\s*)?(동구|서구|남구|북구|광산구)$/.test(gu) ? '광주' : str.trim().split(/\s+/).length > 1 ? '전남' : '';
+  }
   for (const [name, keys] of SIDO) {
     if (keys.some((k) => str.startsWith(k))) return name;
   }

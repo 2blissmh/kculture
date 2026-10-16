@@ -214,7 +214,7 @@ async function collectKopis(cache) {
     return {
       id: `k:${it.mt20id}`, src: 'kopis', t: strip(it.prfnm), g,
       sd: normDate(it.prfpdfrom), ed: normDate(it.prfpdto) || normDate(it.prfpdfrom),
-      sido: normSido(it.area) || normSido(fac.ad), sgg: sggFromAddr(fac.ad),
+      sido: normSido(fac.ad) || normSido(it.area), sgg: sggFromAddr(fac.ad),
       pl: strip(it.fcltynm), ad: fac.ad || '',
       img: https(it.poster),
       free: freeFrom(ex.fee), fee: ex.fee || '', age: ex.age || '', am: am ?? (ex.kid ? 0 : null),
