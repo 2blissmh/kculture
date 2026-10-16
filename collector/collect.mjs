@@ -19,7 +19,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   normSido, sggFromAddr, normDate, https, genreFromKopis, genreFromSeoul, genreFromCulture,
-  freeFrom, ageMinFrom, guessIO, strip, parseXmlItems, parseXmlFields, dedupeKey,
+  freeFrom, ageMinFrom, guessGwangjuJeonnam, guessIO, strip, parseXmlItems, parseXmlFields, dedupeKey,
 } from './normalize.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -218,7 +218,8 @@ async function collectKopis(cache) {
     return {
       id: `k:${it.mt20id}`, src: 'kopis', t: strip(it.prfnm), g,
       sd: normDate(it.prfpdfrom), ed: normDate(it.prfpdto) || normDate(it.prfpdfrom),
-      sido: normSido(fac.ad) || normSido(it.area), sgg: sggFromAddr(fac.ad),
+      sido: normSido(fac.ad) || normSido(it.area) || (/^(전남광주|광주전남)/.test(it.area || '') ? guessGwangjuJeonnam(it.prfnm, it.fcltynm) : ''),
+      sgg: sggFromAddr(fac.ad),
       pl: strip(it.fcltynm), ad: fac.ad || '',
       img: https(it.poster),
       free: freeFrom(ex.fee), fee: ex.fee || '', age: ex.age || '', am: am ?? (ex.kid ? 0 : null),

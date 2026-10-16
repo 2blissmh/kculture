@@ -54,6 +54,13 @@ export function normSido(s) {
   return '';
 }
 
+/** 지역이 '전남광주통합특별시'로만 와서 나눌 수 없을 때 제목·장소로 추정 */
+const JEONNAM_CITY = /여수|순천|목포|나주|광양|담양|곡성|구례|고흥|보성|화순|장흥|강진|해남|영암|무안|함평|영광|장성|완도|진도|신안/;
+export function guessGwangjuJeonnam(...texts) {
+  const s = texts.filter(Boolean).join(' ');
+  return JEONNAM_CITY.test(s) ? '전남' : '광주';
+}
+
 /** 주소에서 시·군·구 추출: "경기도 수원시 팔달구 …" → "수원시", 세종은 "" */
 export function sggFromAddr(addr) {
   if (!addr) return '';
