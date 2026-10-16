@@ -175,7 +175,7 @@
     ['dance','무용','#0d9488'],['exhibit','전시','#4f46e5'],['event','체험·행사','#16a34a'],['etc','기타','#64748b']
   ];
   var G = {}; GENRES.forEach(function (g) { G[g[0]] = { name: g[1], color: g[2] }; });
-  var SRC = { tour: '한국관광공사 TourAPI', kopis: 'KOPIS 공연예술통합전산망', seoul: '서울 열린데이터광장' };
+  var SRC = { tour: '한국관광공사 TourAPI', kopis: 'KOPIS 공연예술통합전산망', culture: '한국문화정보원 문화포털', seoul: '서울 열린데이터광장' };
   var DATES = [['all','전체'],['today','오늘'],['weekend','이번 주말'],['week','이번 주'],['month','이번 달'],['custom','기간 선택']];
   var AGES = [['','전체 연령'],['0','전체관람가'],['5','만 5세 관람 가능'],['8','만 8세 관람 가능'],['13','만 13세 관람 가능']];
 
@@ -301,7 +301,7 @@
       '</div>' +
       '<div data-panel="calendar" hidden></div>' +
       '<div data-panel="likes" hidden></div>' +
-      '<p class="kc-credit">데이터 출처: 한국관광공사 TourAPI · (재)예술경영지원센터 공연예술통합전산망(www.kopis.or.kr) · 서울 열린데이터광장</p>';
+      '<p class="kc-credit">데이터 출처: 한국관광공사 TourAPI · (재)예술경영지원센터 공연예술통합전산망(www.kopis.or.kr) · 한국문화정보원 문화포털 · 서울 열린데이터광장</p>';
     if (window.matchMedia && window.matchMedia('(max-width:768px)').matches) ref('filters').classList.add('kc-collapsed');
     ref('q').value = S.q;
   }

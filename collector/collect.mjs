@@ -18,7 +18,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  normSido, sggFromAddr, normDate, https, genreFromKopis, genreFromSeoul,
+  normSido, sggFromAddr, normDate, https, genreFromKopis, genreFromSeoul, genreFromCulture,
   freeFrom, ageMinFrom, guessIO, strip, parseXmlItems, parseXmlFields, dedupeKey,
 } from './normalize.mjs';
 
@@ -27,13 +27,17 @@ const OUT_FILE = join(ROOT, 'docs', 'data', 'events.json');
 const CACHE_FILE = join(ROOT, 'cache', 'enrich.json');
 
 const env = process.env;
-const KEYS = { tour: env.TOUR_API_KEY, kopis: env.KOPIS_API_KEY, seoul: env.SEOUL_API_KEY };
+// Secrets에 붙여넣을 때 섞인 공백·줄바꿈 제거 (키 오류의 흔한 원인)
+const clean = (k) => (k || '').replace(/\s+/g, '');
+const KEYS = { tour: clean(env.TOUR_API_KEY), kopis: clean(env.KOPIS_API_KEY), seoul: clean(env.SEOUL_API_KEY) };
+KEYS.culture = KEYS.tour; // 한국문화정보원도 같은 공공데이터포털 인증키 사용
 
 // 수집 범위 / 한도 (필요 시 환경변수로 조정)
 const DAYS_AHEAD = Number(env.DAYS_AHEAD || 120);          // 오늘부터 며칠 뒤 시작 행사까지
 const TOUR_ENRICH_PER_RUN = Number(env.TOUR_ENRICH || 150); // TourAPI 개발계정 1,000건/일 → 6시간마다 150건
 const KOPIS_ENRICH_PER_RUN = Number(env.KOPIS_ENRICH || 400);
 const FACILITY_ENRICH_PER_RUN = Number(env.FACILITY_ENRICH || 150);
+const CULTURE_ENRICH_PER_RUN = Number(env.CULTURE_ENRICH || 200); // 개발계정 1,000건/일 → 6시간마다 200건
 
 const today = new Date(Date.now() + 9 * 3600e3); // KST
 const ymd = (d) => d.toISOString().slice(0, 10);
@@ -226,6 +230,58 @@ async function collectKopis(cache) {
   }).filter((e) => e.sd && e.ed >= TODAY && e.sd <= UNTIL);
 }
 
+// ---------------------------------------------------------------- 한국문화정보원 (한눈에보는문화정보)
+const CULTURE_BASE = 'https://apis.data.go.kr/B553457/cultureinfo';
+
+async function collectCulture(cache) {
+  const raw = [];
+  const rows = 500;
+  for (let page = 1; page <= 20; page++) {
+    const q = new URLSearchParams({ serviceKey: KEYS.culture, numOfrows: rows, PageNo: page, from: compact(TODAY), to: compact(UNTIL) });
+    const xml = await get(`${CULTURE_BASE}/period2?${q}`, { type: 'text' });
+    if (!/<resultCode>00<\/resultCode>/.test(xml)) throw new Error(`한국문화정보원 오류: ${strip(xml).slice(0, 160)}`);
+    const items = parseXmlItems(xml, 'item');
+    raw.push(...items);
+    const total = Number((xml.match(/<totalCount>(\d+)<\/totalCount>/) || [])[1] || 0);
+    if (page * rows >= total || items.length < rows) break;
+  }
+  log(`한국문화정보원 ${raw.length}건 수신`);
+
+  // 상세(가격·예매링크·주소·전화) 보강 — 곧 열리는 것부터
+  const todo = raw.filter((it) => !cache.cult[it.seq])
+    .sort((a, b) => String(a.startDate).localeCompare(String(b.startDate)))
+    .slice(0, CULTURE_ENRICH_PER_RUN);
+  await pool(todo, 4, async (it) => {
+    const q = new URLSearchParams({ serviceKey: KEYS.culture, seq: it.seq });
+    const xml = await get(`${CULTURE_BASE}/detail2?${q}`, { type: 'text' });
+    const d = parseXmlItems(xml, 'item')[0] || {};
+    cache.cult[it.seq] = {
+      fee: strip(d.price), url: safe(d.url) || safe(d.placeUrl), ad: strip(d.placeAddr), tel: strip(d.phone),
+      img: https(d.imgUrl), at: TODAY,
+    };
+  });
+  log(`한국문화정보원 상세 보강 ${todo.length}건`);
+
+  return raw.map((it) => {
+    const ex = cache.cult[it.seq] || {};
+    const g = genreFromCulture(it.realmName || it.serviceName);
+    const title = strip(it.title);
+    const area = strip(it.area), sgg = strip(it.sigungu);
+    return {
+      id: `c:${it.seq}`, src: 'culture', t: title, g,
+      sd: normDate(it.startDate), ed: normDate(it.endDate) || normDate(it.startDate),
+      sido: normSido(ex.ad) || normSido(`${area} ${sgg}`) || normSido(area), sgg: /(시|군|구)$/.test(sgg) ? sgg : sggFromAddr(ex.ad),
+      pl: strip(it.place), ad: ex.ad || '',
+      img: ex.img || https(it.thumbnail),
+      free: freeFrom(ex.fee), fee: ex.fee || '', age: '', am: null,
+      io: guessIO(it.place, g, title),
+      lat: Number(it.gpsY) || null, lng: Number(it.gpsX) || null,
+      url: ex.url || '', tel: ex.tel || '',
+    };
+  }).filter((e) => e.sd && e.ed >= TODAY && e.sd <= UNTIL);
+}
+const safe = (u) => (/^https?:\/\//i.test(u || '') ? https(strip(u)) : '');
+
 // ---------------------------------------------------------------- 서울시
 async function collectSeoul() {
   // 서울 열린데이터광장은 http + 8088 포트만 제공. 한 번에 최대 1,000건
@@ -273,12 +329,13 @@ async function readJson(file, fallback) {
 
 async function main() {
   const cache = await readJson(CACHE_FILE, {});
-  cache.tour ||= {}; cache.kopis ||= {}; cache.fac ||= {};
+  cache.tour ||= {}; cache.kopis ||= {}; cache.fac ||= {}; cache.cult ||= {};
   const prev = await readJson(OUT_FILE, { events: [] });
 
   const sources = [
     ['tour', collectTour, '한국관광공사 TourAPI'],
     ['kopis', collectKopis, 'KOPIS'],
+    ['culture', collectCulture, '한국문화정보원'],
     ['seoul', collectSeoul, '서울 열린데이터광장'],
   ];
   const all = [];
@@ -318,6 +375,7 @@ async function main() {
   // 캐시 정리: 지난 공연/축제 항목 제거로 파일 비대화 방지
   const alive = new Set(events.map((e) => e.id));
   for (const id of Object.keys(cache.tour)) if (!alive.has(`t:${id}`) && cache.tour[id].at < ymd(addDays(today, -30))) delete cache.tour[id];
+  for (const id of Object.keys(cache.cult)) if (!alive.has(`c:${id}`) && cache.cult[id].at < ymd(addDays(today, -30))) delete cache.cult[id];
   for (const id of Object.keys(cache.kopis)) if (!alive.has(`k:${id}`) && cache.kopis[id].at < ymd(addDays(today, -30))) delete cache.kopis[id];
 
   // null/빈 값 필드는 생략해 용량 절감

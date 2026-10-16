@@ -105,6 +105,22 @@ export function genreFromSeoul(codename) {
   return 'etc';
 }
 
+const GENRE_CULTURE = [
+  [/축제|행사/, 'festival'],
+  [/뮤지컬|오페라/, 'musical'],
+  [/연극/, 'theater'],
+  [/클래식/, 'classic'],
+  [/국악/, 'gugak'],
+  [/무용|발레/, 'dance'],
+  [/음악|콘서트/, 'concert'],
+  [/전시|미술/, 'exhibit'],
+  [/교육|체험/, 'event'],
+];
+export function genreFromCulture(realm) {
+  for (const [re, g] of GENRE_CULTURE) if (re.test(realm || '')) return g;
+  return 'etc'; // 아동/가족, 기타
+}
+
 const NUM_WON = /[0-9][0-9,]*\s*원/;
 /** 요금 문구로 무료 여부 판정 */
 export function freeFrom(text) {
@@ -187,6 +203,6 @@ export function parseXmlFields(block) {
 
 /** 중복 판정용 키: 공백/특수문자 제거한 제목 + 시작일 */
 export function dedupeKey(e) {
-  const t = (e.t || '').replace(/[\s\[\]()<>〈〉《》「」『』"'“”‘’·,.:!?\-~]/g, '').toLowerCase();
+  const t = (e.t || '').replace(/^\s*(\[[^\]]*\]\s*)+/, '').replace(/[\s\[\]()<>〈〉《》「」『』"'“”‘’·,.:!?\-~]/g, '').toLowerCase();
   return `${t}|${e.sd}`;
 }
