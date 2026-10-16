@@ -20,13 +20,18 @@ jobs:
           enc() { python3 -c "import urllib.parse,sys;print(urllib.parse.quote(sys.argv[1],safe=''))" "$1"; }
           K=$(enc "$TOUR")
           probe() { echo "== $1"; curl -s -m 60 --retry 2 -o /tmp/b -w "HTTP %{http_code} %{time_total}s\n" "$2" || echo "curl 실패 $?"; head -c 700 /tmp/b; echo; }
-          probe "Tour festival" "https://apis.data.go.kr/B551011/KorService2/searchFestival2?serviceKey=$K&MobileOS=ETC&MobileApp=KC&_type=json&numOfRows=1&eventStartDate=20261001"
-          probe "Tour detailIntro" "https://apis.data.go.kr/B551011/KorService2/detailIntro2?serviceKey=$K&MobileOS=ETC&MobileApp=KC&_type=json&contentId=$(python3 -c "import json;print(json.load(open('/tmp/b'))['response']['body']['items']['item'][0]['contentid'])" 2>/dev/null)&contentTypeId=15"
-          probe "한눈에 period2" "https://apis.data.go.kr/B553457/cultureinfo/period2?serviceKey=$K&numOfrows=2&PageNo=1&from=20261016&to=20261031"
-          for s in 1 3001 6001 12001; do
-            echo "== Seoul $s"
-            curl -s -m 120 -o /tmp/s -w "HTTP %{http_code} %{time_total}s %{size_download}B\n" "http://openapi.seoul.go.kr:8088/$SEOUL/json/culturalEventInfo/$s/$((s+999))/" || echo "curl 실패 $?"
-            python3 -c "import json;r=json.load(open('/tmp/s'))['culturalEventInfo']['row'];e=[x['END_DATE'][:10] for x in r];print('rows',len(r),'END 최소',min(e),'최대',max(e),'첫행 등록',r[0].get('RGSTDATE'))" 2>&1 | head -2
-          done
-          echo "== node fetch Seoul 1000"
-          node -e "const t=Date.now();fetch('http://openapi.seoul.go.kr:8088/'+process.env.S+'/json/culturalEventInfo/1/1000/').then(r=>r.text()).then(x=>console.log('ok',x.length,(Date.now()-t)+'ms')).catch(e=>console.log('fail',e.cause&&e.cause.code,e.message,(Date.now()-t)+'ms'))"
+          curl -s -m 60 -o /tmp/c "https://apis.data.go.kr/B553457/cultureinfo/period2?serviceKey=$K&numOfrows=500&PageNo=1&from=20261016&to=20270215"
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET, collections
+          r=ET.parse('/tmp/c').getroot()
+          print('total', r.findtext('.//totalCount'))
+          items=r.findall('.//item')
+          print('fields', sorted({c.tag for it in items for c in it}))
+          for k in ['serviceName','realmName','area']:
+              print(k, collections.Counter(it.findtext(k) for it in items).most_common(25))
+          print('sample', {c.tag:(c.text or '')[:80] for c in items[0]})
+          print('seq', items[0].findtext('seq'))
+          open('/tmp/seq','w').write(items[0].findtext('seq'))
+          PY
+          echo "== detail2"
+          curl -s -m 60 "https://apis.data.go.kr/B553457/cultureinfo/detail2?serviceKey=$K&seq=$(cat /tmp/seq)" | head -c 2500; echo
