@@ -1,0 +1,27 @@
+name: API 진단 (임시)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: 접속 진단
+        env:
+          TOUR: ${{ secrets.TOUR_API_KEY }}
+          SEOUL: ${{ secrets.SEOUL_API_KEY }}
+        run: |
+          echo "runner IP 국가: $(curl -s https://ipinfo.io/country)"
+          enc() { python3 -c "import urllib.parse,sys;print(urllib.parse.quote(sys.argv[1],safe=''))" "$1"; }
+          K=$(enc "$TOUR")
+          echo "TOUR key 길이: ${#TOUR}"
+          probe() { echo "== $1"; curl -s -m 20 -A "Mozilla/5.0" -o /tmp/b -w "HTTP %{http_code}\n" "$2" || echo "curl 실패 $?"; head -c 400 /tmp/b | sed "s/$K/***/g"; echo; }
+          probe "Tour KorService2 festival" "https://apis.data.go.kr/B551011/KorService2/searchFestival2?serviceKey=$K&MobileOS=ETC&MobileApp=KC&_type=json&numOfRows=1&eventStartDate=20261001"
+          probe "Tour KorService2 areaCode (http)" "http://apis.data.go.kr/B551011/KorService2/areaCode2?serviceKey=$K&MobileOS=ETC&MobileApp=KC&_type=json&numOfRows=1"
+          probe "문화정보원 한눈에 (B553457 cultureinfo)" "https://apis.data.go.kr/B553457/cultureinfo/period2?serviceKey=$K&numOfrows=2&PageNo=1&from=20261016&to=20261031"
+          probe "문화정보원 nopenapi period" "https://apis.data.go.kr/B553457/nopenapi/rest/publicperformancedisplays/period?serviceKey=$K&rows=2&cPage=1&from=20261016&to=20261031"
+          echo "== Seoul"
+          curl -s -m 20 -o /tmp/s -w "HTTP %{http_code}\n" "http://openapi.seoul.go.kr:8088/$SEOUL/json/culturalEventInfo/1/1/" || echo "curl 실패 $?"
+          head -c 300 /tmp/s; echo
