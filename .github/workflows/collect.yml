@@ -1,0 +1,43 @@
+name: 문화행사 데이터 수집
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'   # 6시간마다 (UTC 기준 00,06,12,18시 = KST 09,15,21,03시)
+  workflow_dispatch:         # Actions 탭에서 수동 실행
+
+permissions:
+  contents: write
+
+concurrency:
+  group: collect
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 데이터 수집
+        env:
+          TOUR_API_KEY: ${{ secrets.TOUR_API_KEY }}
+          KOPIS_API_KEY: ${{ secrets.KOPIS_API_KEY }}
+          SEOUL_API_KEY: ${{ secrets.SEOUL_API_KEY }}
+        run: node collector/collect.mjs
+
+      - name: 변경분 커밋
+        run: |
+          git config user.name "kculture-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add docs/data cache
+          if git diff --cached --quiet; then
+            echo "변경 없음"
+          else
+            git commit -m "data: $(date -u +'%Y-%m-%d %H:%M') 수집"
+            git push
+          fi

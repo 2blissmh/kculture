@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>전국 문화생활</title><style>body{margin:0;background:#fff}</style></head>
+<body>
+<!-- =====================================================================
+  전국 문화생활 위젯 (아임웹 "HTML 코드" 위젯에 이 파일 전체를 붙여넣기)
+  ▸ 아래 DATA_URL 에 GitHub Pages 주소를 넣으세요.
+    예) https://내아이디.github.io/kculture/data/events.json
+  ▸ 비워두면 '샘플 데이터'로 동작합니다(미리보기용).
+====================================================================== -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<div id="kc-app" data-data-url="data/events.json"></div>
+<style>
+#kc-app{--kc-bg:#fff;--kc-soft:#f6f7f9;--kc-line:#e6e8ec;--kc-text:#16181d;--kc-sub:#5d6470;--kc-mute:#8b919c;--kc-pri:#ff5a3c;--kc-pri-soft:#fff0ec;--kc-dark:#1f2430;--kc-r:14px;
+  font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:var(--kc-text);background:var(--kc-bg);max-width:1200px;margin:0 auto;padding:16px;line-height:1.5;font-size:15px;-webkit-font-smoothing:antialiased;text-align:left}
+#kc-app *,#kc-app *::before,#kc-app *::after{box-sizing:border-box}
+#kc-app button,#kc-app input,#kc-app select{font:inherit;color:inherit;margin:0}
+#kc-app button{cursor:pointer;background:none;border:0;padding:0}
+#kc-app a{color:inherit;text-decoration:none}
+#kc-app img{display:block;max-width:100%}
+#kc-app h2,#kc-app h3,#kc-app h4,#kc-app p{margin:0;padding:0}
+#kc-app .kc-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+#kc-app .kc-title{font-size:26px;font-weight:800;letter-spacing:-.03em}
+#kc-app .kc-title em{font-style:normal;color:var(--kc-pri)}
+#kc-app .kc-updated{font-size:12px;color:var(--kc-mute)}
+#kc-app .kc-tabs{display:flex;gap:4px;background:var(--kc-soft);padding:4px;border-radius:999px}
+#kc-app .kc-tab{padding:8px 16px;border-radius:999px;font-weight:600;font-size:14px;color:var(--kc-sub);white-space:nowrap}
+#kc-app .kc-tab[aria-selected="true"]{background:#fff;color:var(--kc-text);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+#kc-app .kc-tab b{color:var(--kc-pri);margin-left:2px}
+#kc-app .kc-banner{background:#fff8e1;border:1px solid #ffe08a;color:#7a5b00;border-radius:10px;padding:8px 12px;font-size:13px;margin-bottom:12px}
+#kc-app .kc-search{display:flex;gap:8px;margin-bottom:10px}
+#kc-app .kc-search-box{flex:1;position:relative}
+#kc-app .kc-search-box input{width:100%;height:46px;border:1.5px solid var(--kc-line);border-radius:12px;padding:0 14px 0 42px;background:#fff;outline:none}
+#kc-app .kc-search-box input:focus{border-color:var(--kc-dark)}
+#kc-app .kc-search-box svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--kc-mute)}
+#kc-app .kc-filter-btn{height:46px;padding:0 16px;border:1.5px solid var(--kc-line);border-radius:12px;font-weight:600;display:none;align-items:center;gap:6px;background:#fff}
+#kc-app .kc-filter-btn i{font-style:normal;background:var(--kc-pri);color:#fff;border-radius:999px;font-size:11px;min-width:18px;height:18px;line-height:18px;text-align:center;padding:0 5px}
+#kc-app .kc-filters{border:1px solid var(--kc-line);border-radius:var(--kc-r);padding:6px 16px;margin-bottom:12px;background:#fff}
+#kc-app .kc-frow{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed var(--kc-line)}
+#kc-app .kc-frow:last-child{border-bottom:0}
+#kc-app .kc-flabel{flex:0 0 52px;font-size:13px;font-weight:700;color:var(--kc-sub);padding-top:7px}
+#kc-app .kc-fbody{flex:1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-width:0}
+#kc-app .kc-chip{height:34px;padding:0 13px;border:1px solid var(--kc-line);border-radius:999px;font-size:13.5px;background:#fff;color:var(--kc-sub);white-space:nowrap;transition:all .12s}
+#kc-app .kc-chip:hover{border-color:#c9ccd2}
+#kc-app .kc-chip[aria-pressed="true"]{background:var(--kc-dark);border-color:var(--kc-dark);color:#fff;font-weight:600}
+#kc-app .kc-chip.kc-free[aria-pressed="true"]{background:#16a34a;border-color:#16a34a}
+#kc-app select.kc-sel,#kc-app input.kc-date{height:34px;border:1px solid var(--kc-line);border-radius:10px;padding:0 10px;background:#fff;font-size:13.5px;max-width:100%}
+#kc-app .kc-range{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+#kc-app .kc-sep{width:1px;height:20px;background:var(--kc-line);margin:0 4px}
+#kc-app .kc-hint{font-size:11.5px;color:var(--kc-mute)}
+#kc-app .kc-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 10px;flex-wrap:wrap}
+#kc-app .kc-count{font-weight:700}
+#kc-app .kc-count b{color:var(--kc-pri)}
+#kc-app .kc-actives{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+#kc-app .kc-active{font-size:12.5px;background:var(--kc-pri-soft);color:#c2331a;border-radius:999px;padding:4px 6px 4px 10px;display:inline-flex;align-items:center;gap:4px}
+#kc-app .kc-active button{width:18px;height:18px;border-radius:50%;line-height:18px;font-size:13px;color:#c2331a}
+#kc-app .kc-reset{font-size:12.5px;color:var(--kc-sub);text-decoration:underline}
+#kc-app .kc-section{margin:22px 0 6px}
+#kc-app .kc-section h3{font-size:19px;font-weight:800;letter-spacing:-.02em;margin-bottom:10px;display:flex;align-items:baseline;gap:8px}
+#kc-app .kc-section h3 small{font-size:12.5px;font-weight:500;color:var(--kc-mute)}
+#kc-app .kc-rail-wrap{position:relative}
+#kc-app .kc-rail{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(200px,22%);gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:thin}
+#kc-app .kc-rail>*{scroll-snap-align:start}
+#kc-app .kc-nav{position:absolute;top:34%;width:36px;height:36px;border-radius:50%;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.15);font-size:18px;z-index:2}
+#kc-app .kc-nav.l{left:-12px}#kc-app .kc-nav.r{right:-12px}
+#kc-app .kc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px 14px}
+#kc-app .kc-card{position:relative;display:flex;flex-direction:column;cursor:pointer;min-width:0}
+#kc-app .kc-thumb{position:relative;aspect-ratio:3/4;border-radius:12px;overflow:hidden;background:var(--kc-soft)}
+#kc-app .kc-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .25s}
+#kc-app .kc-card:hover .kc-thumb img{transform:scale(1.04)}
+#kc-app .kc-ph,.kc-modal .kc-ph{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:14px;color:#fff;font-weight:800;font-size:17px;line-height:1.3;letter-spacing:-.02em;word-break:keep-all}
+#kc-app .kc-ph span,.kc-modal .kc-ph span{font-size:11px;font-weight:600;opacity:.85;margin-bottom:4px}
+#kc-app .kc-badges{position:absolute;left:8px;top:8px;display:flex;gap:4px;flex-wrap:wrap;right:44px}
+#kc-app .kc-badge{font-size:11px;font-weight:700;padding:3px 7px;border-radius:6px;background:rgba(20,22,28,.78);color:#fff;line-height:1.3}
+#kc-app .kc-badge.hot{background:var(--kc-pri)}
+#kc-app .kc-badge.free{background:#16a34a}
+#kc-app .kc-heart{position:absolute;right:8px;top:8px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+#kc-app .kc-heart svg{width:18px;height:18px}
+#kc-app .kc-heart[aria-pressed="true"] svg{fill:var(--kc-pri);stroke:var(--kc-pri)}
+#kc-app .kc-info{padding:9px 2px 0}
+#kc-app .kc-genre{font-size:12px;font-weight:700}
+#kc-app .kc-name{font-size:15px;font-weight:700;line-height:1.35;margin:2px 0 4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:keep-all;overflow-wrap:anywhere}
+#kc-app .kc-meta{font-size:12.5px;color:var(--kc-sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#kc-app .kc-more{display:block;margin:22px auto 4px;height:46px;padding:0 28px;border:1.5px solid var(--kc-line);border-radius:999px;font-weight:700;background:#fff}
+#kc-app .kc-empty{padding:50px 10px;text-align:center;color:var(--kc-sub)}
+#kc-app .kc-empty b{display:block;font-size:17px;color:var(--kc-text);margin-bottom:4px}
+#kc-app .kc-loading{padding:60px 0;text-align:center;color:var(--kc-mute)}
+/* 캘린더 */
+#kc-app .kc-cal-head{display:flex;align-items:center;justify-content:space-between;margin:6px 0 10px}
+#kc-app .kc-cal-head h3{font-size:20px;font-weight:800}
+#kc-app .kc-cal-head button{width:36px;height:36px;border:1px solid var(--kc-line);border-radius:10px;font-size:16px}
+#kc-app .kc-cal{display:grid;grid-template-columns:repeat(7,1fr);border-top:1px solid var(--kc-line);border-left:1px solid var(--kc-line)}
+#kc-app .kc-dow{font-size:12px;font-weight:700;text-align:center;padding:6px 0;background:var(--kc-soft);border-right:1px solid var(--kc-line);border-bottom:1px solid var(--kc-line);color:var(--kc-sub)}
+#kc-app .kc-day{min-height:92px;padding:5px;border-right:1px solid var(--kc-line);border-bottom:1px solid var(--kc-line);text-align:left;display:flex;flex-direction:column;gap:3px;background:#fff;min-width:0}
+#kc-app .kc-day.out{background:#fafbfc;color:#b9bdc5}
+#kc-app .kc-day.sel{outline:2px solid var(--kc-dark);outline-offset:-2px;z-index:1}
+#kc-app .kc-day .n{font-size:13px;font-weight:700}
+#kc-app .kc-day.today .n{background:var(--kc-pri);color:#fff;border-radius:999px;padding:0 7px;align-self:flex-start}
+#kc-app .kc-day.sun .n{color:#e5484d}#kc-app .kc-day.sat .n{color:#3b6fe5}
+#kc-app .kc-day.today.sun .n,#kc-app .kc-day.today.sat .n{color:#fff}
+#kc-app .kc-plan{font-size:11px;background:var(--kc-pri-soft);color:#b42a12;border-radius:4px;padding:1px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+#kc-app .kc-cnt{font-size:11px;color:var(--kc-mute);margin-top:auto}
+#kc-app .kc-daylist{margin-top:16px}
+#kc-app .kc-row{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--kc-line);align-items:center;cursor:pointer}
+#kc-app .kc-row .kc-rimg{width:54px;height:72px;border-radius:8px;overflow:hidden;flex:0 0 auto;background:var(--kc-soft);position:relative}
+#kc-app .kc-row .kc-rimg img{width:100%;height:100%;object-fit:cover}
+#kc-app .kc-row .kc-rbody{flex:1;min-width:0}
+#kc-app .kc-row .kc-name{font-size:14.5px;margin:1px 0 2px}
+#kc-app .kc-row .kc-x{font-size:12px;color:var(--kc-sub);border:1px solid var(--kc-line);border-radius:8px;padding:4px 8px;flex:0 0 auto}
+#kc-app .kc-sub{font-size:16px;font-weight:800;margin:18px 0 4px}
+/* 모달 */
+.kc-modal{position:fixed;inset:0;z-index:2147483000;background:rgba(10,12,16,.55);display:flex;align-items:center;justify-content:center;padding:16px;font-family:"Pretendard Variable",Pretendard,-apple-system,"Malgun Gothic",sans-serif;color:#16181d;line-height:1.5;text-align:left}
+.kc-modal *{box-sizing:border-box}
+.kc-modal button,.kc-modal input{font:inherit;color:inherit}
+.kc-modal button{cursor:pointer;border:0;background:none;padding:0}
+.kc-modal a{color:inherit;text-decoration:none}
+.kc-dialog{background:#fff;border-radius:18px;max-width:760px;width:100%;max-height:calc(100vh - 32px);overflow:auto;position:relative;display:grid;grid-template-columns:260px 1fr;gap:0}
+.kc-dialog .kc-dimg{background:#f6f7f9;position:relative;min-height:340px}
+.kc-dialog .kc-dimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.kc-dialog .kc-dbody{padding:22px 22px 18px;min-width:0}
+.kc-dialog .kc-close{position:absolute;right:10px;top:10px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.9);font-size:20px;z-index:3;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.kc-dialog h2{font-size:21px;font-weight:800;letter-spacing:-.02em;line-height:1.35;margin:4px 0 12px;word-break:keep-all;padding-right:30px}
+.kc-dialog dl{display:grid;grid-template-columns:72px 1fr;gap:7px 10px;font-size:14px;margin:0 0 14px}
+.kc-dialog dt{color:#8b919c;font-weight:600}
+.kc-dialog dd{margin:0;word-break:break-all}
+.kc-dialog .kc-tag{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;background:#f1f2f4;margin-right:4px}
+.kc-dialog .kc-plan-box{background:#f6f7f9;border-radius:12px;padding:12px;margin-bottom:12px}
+.kc-dialog .kc-plan-box label{font-size:13px;font-weight:700;display:block;margin-bottom:6px}
+.kc-dialog .kc-plan-box .r{display:flex;gap:6px;flex-wrap:wrap}
+.kc-dialog .kc-plan-box input{height:38px;border:1px solid #e6e8ec;border-radius:10px;padding:0 10px;background:#fff;flex:1;min-width:140px}
+.kc-dialog .kc-btn{height:38px;padding:0 14px;border-radius:10px;font-weight:700;font-size:13.5px;display:inline-flex;align-items:center;justify-content:center;gap:5px;border:1px solid #e6e8ec;background:#fff;white-space:nowrap}
+.kc-dialog .kc-btn.pri{background:#ff5a3c;border-color:#ff5a3c;color:#fff}
+.kc-dialog .kc-btn.dark{background:#1f2430;border-color:#1f2430;color:#fff}
+.kc-dialog .kc-btn[aria-pressed="true"]{color:#ff5a3c;border-color:#ff5a3c}
+.kc-dialog .kc-acts{display:flex;flex-wrap:wrap;gap:6px}
+.kc-dialog .kc-src{font-size:11.5px;color:#8b919c;margin-top:12px}
+.kc-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#1f2430;color:#fff;padding:11px 18px;border-radius:999px;font-size:14px;z-index:2147483001;font-family:"Pretendard Variable",Pretendard,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.2);animation:kcfade .2s}
+@keyframes kcfade{from{opacity:0;transform:translate(-50%,8px)}}
+@media (max-width:768px){
+  #kc-app{padding:12px;font-size:14px}
+  #kc-app .kc-title{font-size:21px}
+  #kc-app .kc-tabs{width:100%}
+  #kc-app .kc-tab{flex:1;padding:8px 6px}
+  #kc-app .kc-filter-btn{display:inline-flex}
+  #kc-app .kc-filters.kc-collapsed{display:none}
+  #kc-app .kc-frow{flex-direction:column;gap:6px}
+  #kc-app .kc-flabel{padding-top:0;flex:none}
+  #kc-app .kc-fbody{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:2px;scrollbar-width:none}
+  #kc-app .kc-fbody.wrap{flex-wrap:wrap}
+  #kc-app .kc-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 10px}
+  #kc-app .kc-rail{grid-auto-columns:42%}
+  #kc-app .kc-nav{display:none}
+  #kc-app .kc-name{font-size:14px}
+  #kc-app .kc-day{min-height:64px;padding:3px}
+  #kc-app .kc-plan{font-size:10px;padding:0 2px}
+  .kc-modal{padding:0;align-items:flex-end}
+  .kc-dialog{grid-template-columns:1fr;border-radius:18px 18px 0 0;max-height:92vh}
+  .kc-dialog .kc-dimg{min-height:0;height:240px}
+}
+</style>
+<script>
+(function () {
+  'use strict';
+  var root = document.getElementById('kc-app');
+  if (!root || root.__kc) return;
+  root.__kc = true;
+
+  /* ===================== 설정 ===================== */
+  var DATA_URL = root.getAttribute('data-data-url') || '';   // ← 여기에 events.json 주소 (또는 위 div 의 data-data-url)
+  var PAGE_SIZE = 24;
+  var LS = 'kc_';
+
+  /* ===================== 기준 정보 ===================== */
+  var SIDO = ['서울','부산','대구','인천','광주','대전','울산','세종','경기','강원','충북','충남','전북','전남','경북','경남','제주'];
+  var GENRES = [
+    ['festival','축제','#ff5a3c'],['concert','콘서트','#7c3aed'],['musical','뮤지컬','#db2777'],
+    ['theater','연극','#0891b2'],['classic','클래식','#2563eb'],['gugak','국악','#b45309'],
+    ['dance','무용','#0d9488'],['exhibit','전시','#4f46e5'],['event','체험·행사','#16a34a'],['etc','기타','#64748b']
+  ];
+  var G = {}; GENRES.forEach(function (g) { G[g[0]] = { name: g[1], color: g[2] }; });
+  var SRC = { tour: '한국관광공사 TourAPI', kopis: 'KOPIS 공연예술통합전산망', seoul: '서울 열린데이터광장' };
+  var DATES = [['all','전체'],['today','오늘'],['weekend','이번 주말'],['week','이번 주'],['month','이번 달'],['custom','기간 선택']];
+  var AGES = [['','전체 연령'],['0','전체관람가'],['5','만 5세 관람 가능'],['8','만 8세 관람 가능'],['13','만 13세 관람 가능']];
+
+  /* ===================== 날짜 유틸 ===================== */
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function ymd(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function parse(s) { var p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function add(d, n) { var x = new Date(d); x.setDate(x.getDate() + n); return x; }
+  function diff(a, b) { return Math.round((parse(b) - parse(a)) / 864e5); }
+  var NOW = new Date(); NOW.setHours(0, 0, 0, 0);
+  var TODAY = ymd(NOW);
+  function weekendRange() {
+    var w = NOW.getDay();
+    if (w === 6) return [TODAY, ymd(add(NOW, 1))];
+    if (w === 0) return [TODAY, TODAY];
+    return [ymd(add(NOW, 6 - w)), ymd(add(NOW, 7 - w))];
+  }
+  function rangeOf(key) {
+    if (key === 'today') return [TODAY, TODAY];
+    if (key === 'weekend') return weekendRange();
+    if (key === 'week') return [TODAY, ymd(add(NOW, NOW.getDay() === 0 ? 0 : 7 - NOW.getDay()))];
+    if (key === 'month') return [TODAY, ymd(new Date(NOW.getFullYear(), NOW.getMonth() + 1, 0))];
+    if (key === 'custom') return [S.from || TODAY, S.to || S.from || '9999-12-31'];
+    return null;
+  }
+  function fmtDate(s) { var d = parse(s); return (d.getFullYear() !== NOW.getFullYear() ? d.getFullYear() + '.' : '') + (d.getMonth() + 1) + '.' + d.getDate(); }
+  function fmtPeriod(e) { return e.sd === e.ed ? fmtDate(e.sd) : fmtDate(e.sd) + ' ~ ' + fmtDate(e.ed); }
+  var DOW = ['일','월','화','수','목','금','토'];
+
+  /* ===================== 공통 유틸 ===================== */
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function safeUrl(u) { return /^https?:\/\//i.test(u || '') ? u : ''; }
+  function load(k, d) { try { var v = localStorage.getItem(LS + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+  function save(k, v) { try { localStorage.setItem(LS + k, JSON.stringify(v)); } catch (e) {} }
+  function hash(s) { var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return (h >>> 0) / 4294967295; }
+  function toast(msg) {
+    var old = document.querySelector('.kc-toast'); if (old) old.remove();
+    var t = document.createElement('div'); t.className = 'kc-toast'; t.textContent = msg; document.body.appendChild(t);
+    setTimeout(function () { t.remove(); }, 2200);
+  }
+  var ICON = {
+    search: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+    heart: '<svg viewBox="0 0 24 24" fill="none" stroke="#5d6470" stroke-width="2" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.6 4.5 7 4.5c2 0 3.5 1.1 5 3 1.5-1.9 3-3 5-3 3.4 0 5.6 3.4 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>',
+    filter: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>'
+  };
+
+  /* ===================== 상태 ===================== */
+  var DATA = [], BY_ID = {}, META = null, DEMO = false;
+  var S = { tab: 'explore', q: '', sido: '', sgg: '', date: 'all', from: '', to: '', genres: [], free: false, age: '', io: '', sort: 'rec', page: 1, cal: new Date(NOW.getFullYear(), NOW.getMonth(), 1), day: TODAY, dayPage: 1 };
+  var saved = load('filters', null);
+  if (saved) ['sido', 'sgg', 'genres', 'free', 'age', 'io', 'sort'].forEach(function (k) { if (saved[k] != null) S[k] = saved[k]; });
+  var LIKES = load('likes', {});      // { id: 이벤트 스냅샷 }
+  var PLANS = load('plans', []);      // [{ id, date, ev }]
+  function persist() { save('filters', { sido: S.sido, sgg: S.sgg, genres: S.genres, free: S.free, age: S.age, io: S.io, sort: S.sort }); }
+
+  /* ===================== 점수 / 필터 ===================== */
+  function score(e, salt) {
+    var s = 0;
+    if (e.img) s += 3;
+    if (e.g === 'festival') s += 2;
+    if (e.sd >= TODAY && diff(TODAY, e.sd) <= 14) s += 2;
+    if (e.ed >= TODAY && diff(TODAY, e.ed) <= 10) s += 1.5;
+    if (e.free) s += 1;
+    if (diff(e.sd, e.ed) > 120) s -= 1.5;           // 상설·장기 전시는 약간 낮춤
+    return s + hash(e.id + (salt || '')) * 1.5;      // 매달 바뀌는 약간의 변주
+  }
+  function overlaps(e, r) { return e.sd <= r[1] && e.ed >= r[0]; }
+  function activeFilterCount() {
+    return (S.sido ? 1 : 0) + (S.sgg ? 1 : 0) + (S.date !== 'all' ? 1 : 0) + S.genres.length + (S.free ? 1 : 0) + (S.age ? 1 : 0) + (S.io ? 1 : 0);
+  }
+  function filtered(opts) {
+    opts = opts || {};
+    var q = S.q.trim().toLowerCase(), r = opts.range || rangeOf(S.date), ageN = S.age === '' ? null : +S.age;
+    return DATA.filter(function (e) {
+      if (S.sido && e.sido !== S.sido) return false;
+      if (S.sgg && e.sgg !== S.sgg) return false;
+      if (r && !overlaps(e, r)) return false;
+      if (!opts.ignoreGenre && S.genres.length && S.genres.indexOf(e.g) < 0) return false;
+      if (S.free && e.free !== true) return false;
+      if (ageN !== null && (e.am == null || e.am > ageN)) return false;
+      if (S.io && e.io !== S.io) return false;
+      if (q && (e.t + ' ' + (e.pl || '') + ' ' + (e.sgg || '') + ' ' + (e.sido || '')).toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+  }
+  function sorted(list) {
+    var salt = TODAY.slice(0, 7);
+    var by = {
+      rec: function (a, b) { return (b._s || (b._s = score(b, salt))) - (a._s || (a._s = score(a, salt))); },
+      end: function (a, b) { return a.ed.localeCompare(b.ed) || a.sd.localeCompare(b.sd); },
+      start: function (a, b) { return (a.sd < TODAY ? TODAY : a.sd).localeCompare(b.sd < TODAY ? TODAY : b.sd) || a.ed.localeCompare(b.ed); },
+      name: function (a, b) { return a.t.localeCompare(b.t, 'ko'); }
+    }[S.sort] || null;
+    return by ? list.slice().sort(by) : list;
+  }
+  /** 장르가 고르게 섞이도록 상위 후보를 라운드로빈 */
+  function diversify(list, n) {
+    var buckets = {}, order = [];
+    list.forEach(function (e) { if (!buckets[e.g]) { buckets[e.g] = []; order.push(e.g); } buckets[e.g].push(e); });
+    var out = [];
+    while (out.length < n && order.length) {
+      order = order.filter(function (g) { var x = buckets[g].shift(); if (x) out.push(x); return buckets[g].length > 0; });
+    }
+    return out.slice(0, n);
+  }
+
+  /* ===================== 렌더: 껍데기 ===================== */
+  function renderShell() {
+    root.innerHTML =
+      '<div class="kc-head"><div><h2 class="kc-title">이번 달 <em>뭐 하지?</em></h2><div class="kc-updated" data-ref="updated"></div></div>' +
+      '<div class="kc-tabs" role="tablist">' +
+      '<button class="kc-tab" role="tab" data-tab="explore">탐색</button>' +
+      '<button class="kc-tab" role="tab" data-tab="calendar">캘린더</button>' +
+      '<button class="kc-tab" role="tab" data-tab="likes">찜</button></div></div>' +
+      '<div data-ref="banner"></div>' +
+      '<div data-panel="explore">' +
+        '<div class="kc-search"><div class="kc-search-box">' + ICON.search +
+        '<input type="search" data-ref="q" placeholder="행사명, 장소, 지역으로 검색" aria-label="검색"></div>' +
+        '<button class="kc-filter-btn" data-act="toggle-filters">' + ICON.filter + '필터 <i data-ref="fcount" hidden></i></button></div>' +
+        '<div class="kc-filters" data-ref="filters"></div>' +
+        '<div data-ref="recs"></div>' +
+        '<div data-ref="results"></div>' +
+      '</div>' +
+      '<div data-panel="calendar" hidden></div>' +
+      '<div data-panel="likes" hidden></div>';
+    if (window.matchMedia && window.matchMedia('(max-width:768px)').matches) ref('filters').classList.add('kc-collapsed');
+    ref('q').value = S.q;
+  }
+  function ref(n) { return root.querySelector('[data-ref="' + n + '"]'); }
+
+  function renderTabs() {
+    var likeN = Object.keys(LIKES).length, planN = PLANS.filter(function (p) { return p.date >= TODAY; }).length;
+    root.querySelectorAll('.kc-tab').forEach(function (b) {
+      var t = b.getAttribute('data-tab');
+      b.setAttribute('aria-selected', String(S.tab === t));
+      b.innerHTML = { explore: '탐색', calendar: '캘린더' + (planN ? ' <b>' + planN + '</b>' : ''), likes: '찜' + (likeN ? ' <b>' + likeN + '</b>' : '') }[t];
+    });
+    root.querySelectorAll('[data-panel]').forEach(function (p) { p.hidden = p.getAttribute('data-panel') !== S.tab; });
+  }
+
+  /* ===================== 렌더: 필터 ===================== */
+  function chip(act, val, label, on, cls) {
+    return '<button class="kc-chip' + (cls ? ' ' + cls : '') + '" data-act="' + act + '" data-val="' + esc(val) + '" aria-pressed="' + (on ? 'true' : 'false') + '">' + esc(label) + '</button>';
+  }
+  function renderFilters() {
+    var sggs = {};
+    if (S.sido) DATA.forEach(function (e) { if (e.sido === S.sido && e.sgg) sggs[e.sgg] = (sggs[e.sgg] || 0) + 1; });
+    var sggList = Object.keys(sggs).sort(function (a, b) { return a.localeCompare(b, 'ko'); });
+    var gCount = {};
+    filtered({ ignoreGenre: true }).forEach(function (e) { gCount[e.g] = (gCount[e.g] || 0) + 1; });
+
+    var h = '';
+    h += '<div class="kc-frow"><div class="kc-flabel">지역</div><div class="kc-fbody wrap">' +
+      '<select class="kc-sel" data-act="sido" aria-label="시·도"><option value="">전국</option>' +
+      SIDO.map(function (s) { return '<option' + (S.sido === s ? ' selected' : '') + '>' + s + '</option>'; }).join('') + '</select>' +
+      '<select class="kc-sel" data-act="sgg" aria-label="시·군·구"' + (S.sido ? '' : ' disabled') + '><option value="">' + (S.sido ? '시·군·구 전체' : '시·도를 먼저 선택') + '</option>' +
+      sggList.map(function (s) { return '<option value="' + esc(s) + '"' + (S.sgg === s ? ' selected' : '') + '>' + esc(s) + ' (' + sggs[s] + ')</option>'; }).join('') + '</select>' +
+      '</div></div>';
+
+    h += '<div class="kc-frow"><div class="kc-flabel">날짜</div><div class="kc-fbody' + (S.date === 'custom' ? ' wrap' : '') + '">' +
+      DATES.map(function (d) { return chip('date', d[0], d[1], S.date === d[0]); }).join('') +
+      (S.date === 'custom' ? '<span class="kc-range"><input type="date" class="kc-date" data-act="from" value="' + S.from + '" min="' + TODAY + '"> ~ <input type="date" class="kc-date" data-act="to" value="' + S.to + '" min="' + (S.from || TODAY) + '"></span>' : '') +
+      '</div></div>';
+
+    h += '<div class="kc-frow"><div class="kc-flabel">장르</div><div class="kc-fbody">' +
+      chip('genre', '', '전체', !S.genres.length) +
+      GENRES.map(function (g) { return chip('genre', g[0], g[1] + (gCount[g[0]] ? ' ' + gCount[g[0]] : ''), S.genres.indexOf(g[0]) >= 0); }).join('') +
+      '</div></div>';
+
+    h += '<div class="kc-frow"><div class="kc-flabel">조건</div><div class="kc-fbody wrap">' +
+      chip('free', '1', '무료만', S.free, 'kc-free') + '<span class="kc-sep"></span>' +
+      chip('io', '', '실내·야외', !S.io) + chip('io', 'in', '실내', S.io === 'in') + chip('io', 'out', '야외', S.io === 'out') + '<span class="kc-sep"></span>' +
+      '<select class="kc-sel" data-act="age" aria-label="관람 연령">' + AGES.map(function (a) { return '<option value="' + a[0] + '"' + (S.age === a[0] ? ' selected' : '') + '>' + a[1] + '</option>'; }).join('') + '</select>' +
+      '<span class="kc-hint">무료·연령·실내외는 제공된 정보 기준(일부 추정)</span>' +
+      '</div></div>';
+    ref('filters').innerHTML = h;
+
+    var n = activeFilterCount(), fc = ref('fcount');
+    fc.hidden = !n; fc.textContent = n;
+  }
+
+  /* ===================== 렌더: 카드 ===================== */
+  function ddayBadge(e) {
+    if (e.sd > TODAY) { var d = diff(TODAY, e.sd); return d <= 7 ? '<span class="kc-badge">D-' + d + '</span>' : '<span class="kc-badge">예정</span>'; }
+    var r = diff(TODAY, e.ed);
+    if (r === 0) return '<span class="kc-badge hot">오늘 마감</span>';
+    if (r <= 5) return '<span class="kc-badge hot">마감 D-' + r + '</span>';
+    return '<span class="kc-badge">진행중</span>';
+  }
+  function thumb(e, big) {
+    var g = G[e.g] || G.etc;
+    var ph = '<div class="kc-ph" style="background:linear-gradient(160deg,' + g.color + ',#1f2430)"><span>' + esc(g.name) + '</span>' + (big ? '' : esc(e.t.length > 40 ? e.t.slice(0, 40) + '…' : e.t)) + '</div>';
+    var img = safeUrl(e.img);
+    return ph + (img ? '<img src="' + esc(img) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">' : '');
+  }
+  function card(e) {
+    var g = G[e.g] || G.etc, liked = !!LIKES[e.id];
+    return '<article class="kc-card" tabindex="0" data-open="' + esc(e.id) + '">' +
+      '<div class="kc-thumb">' + thumb(e) +
+      '<div class="kc-badges">' + ddayBadge(e) + (e.free ? '<span class="kc-badge free">무료</span>' : '') + '</div>' +
+      '<button class="kc-heart" data-act="like" data-val="' + esc(e.id) + '" aria-pressed="' + liked + '" aria-label="찜하기">' + ICON.heart + '</button></div>' +
+      '<div class="kc-info"><div class="kc-genre" style="color:' + g.color + '">' + esc(g.name) + '</div>' +
+      '<h4 class="kc-name">' + esc(e.t) + '</h4>' +
+      '<div class="kc-meta">' + fmtPeriod(e) + '</div>' +
+      '<div class="kc-meta">' + esc([e.sido, e.sgg].filter(Boolean).join(' ') + (e.pl ? ' · ' + e.pl : '')) + '</div></div></article>';
+  }
+  function rail(title, sub, list) {
+    if (!list.length) return '';
+    return '<section class="kc-section"><h3>' + title + ' <small>' + esc(sub) + '</small></h3><div class="kc-rail-wrap">' +
+      '<button class="kc-nav l" data-act="rail" data-val="-1" aria-label="이전">‹</button>' +
+      '<div class="kc-rail">' + list.map(card).join('') + '</div>' +
+      '<button class="kc-nav r" data-act="rail" data-val="1" aria-label="다음">›</button></div></section>';
+  }
+
+  /* ===================== 렌더: 추천 + 결과 ===================== */
+  function renderRecs() {
+    var el = ref('recs');
+    var onlyRegion = !S.q && activeFilterCount() === (S.sido ? 1 : 0) + (S.sgg ? 1 : 0);
+    if (!onlyRegion || !DATA.length) { el.innerHTML = ''; return; }
+    var salt = TODAY.slice(0, 7), region = S.sido ? (S.sgg || S.sido) + ' ' : '';
+    var monthEnd = ymd(new Date(NOW.getFullYear(), NOW.getMonth() + 1, 0));
+    var base = filtered({ range: [TODAY, monthEnd] });
+    var month = diversify(base.slice().sort(function (a, b) { return score(b, salt) - score(a, salt); }), 12);
+    var used = {}; month.forEach(function (e) { used[e.id] = 1; });
+    var wr = weekendRange();
+    var weekend = diversify(filtered({ range: wr }).filter(function (e) { return !used[e.id] && diff(e.sd, e.ed) < 90; })
+      .sort(function (a, b) { return score(b, salt + 'w') - score(a, salt + 'w'); }), 12);
+    weekend.forEach(function (e) { used[e.id] = 1; });
+    var ending = filtered({ range: [TODAY, ymd(add(NOW, 7))] }).filter(function (e) { return !used[e.id] && e.ed <= ymd(add(NOW, 7)) && diff(e.sd, e.ed) >= 2; })
+      .sort(function (a, b) { return (b.img ? 1 : 0) - (a.img ? 1 : 0) || a.ed.localeCompare(b.ed); }).slice(0, 12);
+    var m = NOW.getMonth() + 1;
+    el.innerHTML =
+      rail(region + m + '월의 추천', '이번 달 놓치지 말아야 할 축제·공연', month) +
+      rail(region + '이번 주말 어디 갈까?', fmtDate(wr[0]) + (wr[0] !== wr[1] ? ' ~ ' + fmtDate(wr[1]) : ''), weekend) +
+      rail('곧 끝나요', '7일 안에 마감', ending);
+  }
+  var lastList = [];
+  function renderResults() {
+    var el = ref('results');
+    if (!DATA.length) { el.innerHTML = '<div class="kc-loading">데이터를 불러오는 중…</div>'; return; }
+    lastList = sorted(filtered());
+    var shown = lastList.slice(0, S.page * PAGE_SIZE);
+    var actives = [];
+    if (S.q) actives.push(['q', '"' + S.q + '"']);
+    if (S.sido) actives.push(['sido', S.sido]);
+    if (S.sgg) actives.push(['sgg', S.sgg]);
+    if (S.date !== 'all') actives.push(['date', S.date === 'custom' ? (S.from ? fmtDate(S.from) : '') + ' ~ ' + (S.to ? fmtDate(S.to) : '') : DATES.filter(function (d) { return d[0] === S.date; })[0][1]]);
+    S.genres.forEach(function (g) { actives.push(['genre:' + g, G[g].name]); });
+    if (S.free) actives.push(['free', '무료']);
+    if (S.io) actives.push(['io', S.io === 'in' ? '실내' : '야외']);
+    if (S.age) actives.push(['age', AGES.filter(function (a) { return a[0] === S.age; })[0][1]]);
+
+    var h = '<div class="kc-bar"><div class="kc-count">' + (actives.length ? '검색 결과' : '전체 행사') + ' <b>' + lastList.length.toLocaleString() + '</b>건</div>' +
+      '<select class="kc-sel" data-act="sort" aria-label="정렬">' +
+      [['rec', '추천순'], ['start', '가까운 일정순'], ['end', '마감 임박순'], ['name', '이름순']].map(function (o) { return '<option value="' + o[0] + '"' + (S.sort === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') +
+      '</select></div>';
+    if (actives.length) h += '<div class="kc-actives">' + actives.map(function (a) { return '<span class="kc-active">' + esc(a[1]) + '<button data-act="unset" data-val="' + esc(a[0]) + '" aria-label="해제">×</button></span>'; }).join('') + '<button class="kc-reset" data-act="reset">전체 초기화</button></div>';
+    if (!shown.length) h += '<div class="kc-empty"><b>조건에 맞는 행사가 없어요</b>지역이나 날짜 범위를 넓혀 보세요.</div>';
+    else h += '<div class="kc-grid">' + shown.map(card).join('') + '</div>' +
+      (lastList.length > shown.length ? '<button class="kc-more" data-act="more">더 보기 (' + shown.length + ' / ' + lastList.length + ')</button>' : '');
+    el.innerHTML = h;
+  }
+
+  /* ===================== 렌더: 캘린더 ===================== */
+  function plansOn(day) { return PLANS.filter(function (p) { return p.date === day; }); }
+  function renderCalendar() {
+    var el = root.querySelector('[data-panel="calendar"]');
+    var first = S.cal, y = first.getFullYear(), m = first.getMonth();
+    var start = add(first, -first.getDay()), last = new Date(y, m + 1, 0), end = add(last, 6 - last.getDay());
+    var cells = '', base = filtered({ range: [ymd(start), ymd(end)] }), starts = {};
+    base.forEach(function (e) { starts[e.sd] = (starts[e.sd] || 0) + 1; });
+    for (var d = start; d <= end; d = add(d, 1)) {
+      var k = ymd(d), ps = plansOn(k), w = d.getDay();
+      cells += '<button class="kc-day' + (d.getMonth() !== m ? ' out' : '') + (k === TODAY ? ' today' : '') + (k === S.day ? ' sel' : '') + (w === 0 ? ' sun' : w === 6 ? ' sat' : '') + '" data-act="day" data-val="' + k + '">' +
+        '<span class="n">' + d.getDate() + '</span>' +
+        ps.slice(0, 2).map(function (p) { return '<span class="kc-plan">' + esc(p.ev.t) + '</span>'; }).join('') +
+        (ps.length > 2 ? '<span class="kc-plan">+' + (ps.length - 2) + '</span>' : '') +
+        (starts[k] ? '<span class="kc-cnt">시작 ' + starts[k] + '</span>' : '') + '</button>';
+    }
+    var dayPlans = plansOn(S.day);
+    var dayEvents = sorted(filtered({ range: [S.day, S.day] }));
+    var shown = dayEvents.slice(0, S.dayPage * 15);
+    var upcoming = PLANS.filter(function (p) { return p.date >= TODAY; }).sort(function (a, b) { return a.date.localeCompare(b.date); });
+    var dd = parse(S.day);
+
+    el.innerHTML =
+      '<div class="kc-cal-head"><button data-act="cal" data-val="-1" aria-label="이전 달">‹</button><h3>' + y + '년 ' + (m + 1) + '월</h3><button data-act="cal" data-val="1" aria-label="다음 달">›</button></div>' +
+      '<div class="kc-cal">' + DOW.map(function (w) { return '<div class="kc-dow">' + w + '</div>'; }).join('') + cells + '</div>' +
+      '<p class="kc-hint" style="margin-top:6px">날짜를 누르면 그날 열리는 행사를 볼 수 있어요. 탐색 탭의 필터가 함께 적용됩니다.</p>' +
+      '<div class="kc-daylist">' +
+      '<div class="kc-sub">' + (dd.getMonth() + 1) + '월 ' + dd.getDate() + '일 (' + DOW[dd.getDay()] + ')</div>' +
+      (dayPlans.length ? dayPlans.map(function (p) { return row(p.ev, '<button class="kc-x" data-act="unplan" data-val="' + esc(p.id + '|' + p.date) + '">일정 삭제</button>', '내 일정'); }).join('') : '') +
+      (dayEvents.length ? '<div class="kc-hint" style="margin-top:8px">이 날 열리는 행사 ' + dayEvents.length + '건</div>' + shown.map(function (e) { return row(e, ''); }).join('') +
+        (dayEvents.length > shown.length ? '<button class="kc-more" data-act="daymore">더 보기</button>' : '')
+        : '<div class="kc-empty" style="padding:24px"><b>이 날 열리는 행사가 없어요</b></div>') +
+      '<div class="kc-sub" style="margin-top:28px">다가오는 내 일정 ' + upcoming.length + '</div>' +
+      (upcoming.length ? upcoming.map(function (p) { return row(p.ev, '<button class="kc-x" data-act="unplan" data-val="' + esc(p.id + '|' + p.date) + '">삭제</button>', fmtDate(p.date) + ' (' + DOW[parse(p.date).getDay()] + ')'); }).join('') +
+        '<div style="margin-top:10px"><button class="kc-reset" data-act="ics-all">내 일정 전체를 캘린더 파일(.ics)로 받기</button></div>'
+        : '<p class="kc-hint">행사 상세에서 "일정에 담기"를 누르면 여기에 모여요.</p>') +
+      '</div>';
+  }
+  function row(e, right, label) {
+    var g = G[e.g] || G.etc;
+    return '<div class="kc-row" tabindex="0" data-open="' + esc(e.id) + '"><div class="kc-rimg">' + (safeUrl(e.img) ? '<img src="' + esc(e.img) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">' : '<div class="kc-ph" style="background:' + g.color + ';padding:6px;font-size:10px"><span>' + esc(g.name) + '</span></div>') + '</div>' +
+      '<div class="kc-rbody"><div class="kc-genre" style="color:' + g.color + '">' + (label ? esc(label) + ' · ' : '') + esc(g.name) + (e.free ? ' · 무료' : '') + '</div><div class="kc-name">' + esc(e.t) + '</div>' +
+      '<div class="kc-meta">' + fmtPeriod(e) + ' · ' + esc([e.sido, e.sgg].filter(Boolean).join(' ') + (e.pl ? ' ' + e.pl : '')) + '</div></div>' + (right || '') + '</div>';
+  }
+
+  /* ===================== 렌더: 찜 ===================== */
+  function renderLikes() {
+    var el = root.querySelector('[data-panel="likes"]');
+    var list = Object.keys(LIKES).map(function (id) { return BY_ID[id] || LIKES[id]; })
+      .sort(function (a, b) { return (a.ed < TODAY) - (b.ed < TODAY) || a.sd.localeCompare(b.sd); });
+    el.innerHTML = list.length
+      ? '<div class="kc-bar"><div class="kc-count">찜한 행사 <b>' + list.length + '</b>건</div></div><div class="kc-grid">' + list.map(card).join('') + '</div>'
+      : '<div class="kc-empty"><b>아직 찜한 행사가 없어요</b>마음에 드는 행사의 ♡를 눌러 보세요.</div>';
+  }
+
+  function renderExplore() { renderFilters(); renderRecs(); renderResults(); }
+  function renderAll() {
+    renderTabs();
+    if (S.tab === 'explore') renderExplore();
+    else if (S.tab === 'calendar') renderCalendar();
+    else renderLikes();
+  }
+
+  /* ===================== 상세 모달 ===================== */
+  var modal = null, lastFocus = null;
+  function snapshot(e) { var o = {}; for (var k in e) if (k !== '_s') o[k] = e[k]; return o; }
+  function openDetail(id) {
+    var e = BY_ID[id] || LIKES[id] || (PLANS.filter(function (p) { return p.id === id; })[0] || {}).ev;
+    if (!e) return;
+    closeDetail(true);
+    lastFocus = document.activeElement;
+    var g = G[e.g] || G.etc, liked = !!LIKES[e.id];
+    var minD = e.sd > TODAY ? e.sd : TODAY, planDate = S.date !== 'all' && rangeOf(S.date) && rangeOf(S.date)[0] > minD && rangeOf(S.date)[0] <= e.ed ? rangeOf(S.date)[0] : minD;
+    var link = safeUrl(e.url);
+    var mapUrl = e.lat && e.lng ? 'https://map.kakao.com/link/map/' + encodeURIComponent((e.pl || e.t).replace(/,/g, ' ')) + ',' + e.lat + ',' + e.lng
+      : 'https://map.kakao.com/link/search/' + encodeURIComponent(e.ad || [e.sido, e.sgg, e.pl].filter(Boolean).join(' ') || e.t);
+    var io = e.io === 'in' ? '실내' : e.io === 'out' ? '야외' : '';
+    var ended = e.ed < TODAY;
+
+    modal = document.createElement('div');
+    modal.className = 'kc-modal';
+    modal.innerHTML =
+      '<div class="kc-dialog" role="dialog" aria-modal="true" aria-label="' + esc(e.t) + '">' +
+      '<button class="kc-close" data-act="close" aria-label="닫기">×</button>' +
+      '<div class="kc-dimg">' + thumb(e, true) + '</div>' +
+      '<div class="kc-dbody">' +
+      '<span class="kc-tag" style="background:' + g.color + ';color:#fff">' + esc(g.name) + '</span>' + (e.free ? '<span class="kc-tag" style="background:#dcfce7;color:#166534">무료</span>' : '') + (io ? '<span class="kc-tag">' + io + '</span>' : '') +
+      '<h2>' + esc(e.t) + '</h2>' +
+      '<dl>' +
+      '<dt>기간</dt><dd>' + fmtPeriod(e) + (ended ? ' (종료)' : '') + '</dd>' +
+      '<dt>지역</dt><dd>' + esc([e.sido, e.sgg].filter(Boolean).join(' ') || '-') + '</dd>' +
+      (e.pl ? '<dt>장소</dt><dd>' + esc(e.pl) + '</dd>' : '') +
+      (e.ad ? '<dt>주소</dt><dd>' + esc(e.ad) + '</dd>' : '') +
+      '<dt>요금</dt><dd>' + esc(e.fee || (e.free ? '무료' : '상세 링크에서 확인')) + '</dd>' +
+      '<dt>관람연령</dt><dd>' + esc(e.age || (e.am === 0 ? '제한 없음' : '상세 링크에서 확인')) + '</dd>' +
+      (e.tel ? '<dt>문의</dt><dd>' + esc(e.tel) + '</dd>' : '') +
+      '</dl>' +
+      (ended ? '' : '<div class="kc-plan-box"><label for="kc-plan-date">일정에 담기</label><div class="r">' +
+        '<input type="date" id="kc-plan-date" value="' + planDate + '" min="' + minD + '" max="' + e.ed + '">' +
+        '<button class="kc-btn pri" data-act="plan">내 일정에 추가</button></div></div>') +
+      '<div class="kc-acts">' +
+      '<button class="kc-btn" data-act="like-m" aria-pressed="' + liked + '">' + (liked ? '♥ 찜함' : '♡ 찜하기') + '</button>' +
+      (link ? '<a class="kc-btn dark" href="' + esc(link) + '" target="_blank" rel="noopener">상세·예매</a>' : '') +
+      '<a class="kc-btn" href="' + esc(mapUrl) + '" target="_blank" rel="noopener">지도</a>' +
+      (ended ? '' : '<button class="kc-btn" data-act="gcal">구글 캘린더</button><button class="kc-btn" data-act="ics">.ics</button>') +
+      '<button class="kc-btn" data-act="share">공유</button>' +
+      '</div>' +
+      '<p class="kc-src">출처: ' + esc(SRC[e.src] || '샘플') + ' · 정보는 변경될 수 있으니 방문 전 확인하세요.</p>' +
+      '</div></div>';
+    modal.__ev = e;
+    document.body.appendChild(modal);
+    document.documentElement.style.overflow = 'hidden';
+    modal.addEventListener('click', onModalClick);
+    modal.querySelector('.kc-close').focus();
+    try { history.replaceState(null, '', location.pathname + location.search + '#kc=' + encodeURIComponent(e.id)); } catch (x) {}
+  }
+  function closeDetail(silent) {
+    if (!modal) return;
+    modal.remove(); modal = null;
+    document.documentElement.style.overflow = '';
+    if (!silent) {
+      try { history.replaceState(null, '', location.pathname + location.search); } catch (x) {}
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+  }
+  function onModalClick(ev) {
+    if (ev.target === modal) return closeDetail();
+    var b = ev.target.closest('[data-act]'); if (!b) return;
+    var e = modal.__ev, act = b.getAttribute('data-act');
+    if (act === 'close') closeDetail();
+    else if (act === 'like-m') { toggleLike(e); var on = !!LIKES[e.id]; b.setAttribute('aria-pressed', on); b.textContent = on ? '♥ 찜함' : '♡ 찜하기'; }
+    else if (act === 'plan') {
+      var d = modal.querySelector('#kc-plan-date').value;
+      if (!d || d < e.sd || d > e.ed) return toast('행사 기간 안의 날짜를 골라주세요');
+      if (PLANS.some(function (p) { return p.id === e.id && p.date === d; })) return toast('이미 담긴 일정이에요');
+      PLANS.push({ id: e.id, date: d, ev: snapshot(e) }); save('plans', PLANS);
+      renderTabs(); if (S.tab === 'calendar') renderCalendar();
+      toast(fmtDate(d) + ' 일정에 담았어요');
+    }
+    else if (act === 'gcal') window.open(gcalUrl(e, planDateOf()), '_blank', 'noopener');
+    else if (act === 'ics') downloadIcs([{ ev: e, date: planDateOf() }], 'event.ics');
+    else if (act === 'share') share(e);
+  }
+  function planDateOf() { var i = modal && modal.querySelector('#kc-plan-date'); return i && i.value ? i.value : null; }
+
+  /* ===================== 찜 / 일정 / 공유 ===================== */
+  function toggleLike(e) {
+    if (LIKES[e.id]) { delete LIKES[e.id]; toast('찜을 해제했어요'); }
+    else { LIKES[e.id] = snapshot(e); toast('찜 목록에 담았어요'); }
+    save('likes', LIKES);
+    root.querySelectorAll('.kc-heart[data-val="' + (window.CSS && CSS.escape ? CSS.escape(e.id) : e.id) + '"]').forEach(function (h) { h.setAttribute('aria-pressed', String(!!LIKES[e.id])); });
+    renderTabs(); if (S.tab === 'likes') renderLikes();
+  }
+  function compact(s) { return s.replace(/-/g, ''); }
+  function gcalUrl(e, day) {
+    var s = day || e.sd, en = day || e.ed;
+    var q = 'action=TEMPLATE&text=' + encodeURIComponent(e.t) + '&dates=' + compact(s) + '/' + compact(ymd(add(parse(en), 1))) +
+      '&location=' + encodeURIComponent(e.ad || e.pl || '') + '&details=' + encodeURIComponent((safeUrl(e.url) || '') + '\n기간: ' + fmtPeriod(e));
+    return 'https://calendar.google.com/calendar/render?' + q;
+  }
+  function icsEsc(s) { return String(s || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n'); }
+  function downloadIcs(items, name) {
+    var stamp = new Date().toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z';
+    var lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//KCulture//KO', 'CALSCALE:GREGORIAN'];
+    items.forEach(function (it, i) {
+      var e = it.ev, s = it.date || e.sd, en = it.date || e.ed;
+      lines.push('BEGIN:VEVENT', 'UID:' + e.id.replace(/[^a-zA-Z0-9]/g, '') + '-' + compact(s) + '-' + i + '@kculture', 'DTSTAMP:' + stamp,
+        'DTSTART;VALUE=DATE:' + compact(s), 'DTEND;VALUE=DATE:' + compact(ymd(add(parse(en), 1))),
+        'SUMMARY:' + icsEsc(e.t), 'LOCATION:' + icsEsc(e.ad || e.pl), 'DESCRIPTION:' + icsEsc('기간: ' + fmtPeriod(e) + (safeUrl(e.url) ? '\n' + e.url : '')),
+        safeUrl(e.url) ? 'URL:' + e.url : '', 'END:VEVENT');
+    });
+    lines.push('END:VCALENDAR');
+    var blob = new Blob([lines.filter(Boolean).join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  }
+  function share(e) {
+    var url = location.href.split('#')[0] + '#kc=' + encodeURIComponent(e.id);
+    if (navigator.share) { navigator.share({ title: e.t, text: fmtPeriod(e) + ' ' + (e.pl || ''), url: url }).catch(function () {}); return; }
+    if (navigator.clipboard) navigator.clipboard.writeText(url).then(function () { toast('링크를 복사했어요'); }, function () { prompt('링크를 복사하세요', url); });
+    else prompt('링크를 복사하세요', url);
+  }
+
+  /* ===================== 이벤트 바인딩 ===================== */
+  var qTimer;
+  root.addEventListener('input', function (ev) {
+    if (ev.target.getAttribute('data-ref') === 'q') {
+      clearTimeout(qTimer);
+      qTimer = setTimeout(function () { S.q = ev.target.value; S.page = 1; renderRecs(); renderResults(); }, 220);
+    }
+  });
+  root.addEventListener('change', function (ev) {
+    var t = ev.target, act = t.getAttribute('data-act'); if (!act) return;
+    if (act === 'sido') { S.sido = t.value; S.sgg = ''; }
+    else if (act === 'sgg') S.sgg = t.value;
+    else if (act === 'age') S.age = t.value;
+    else if (act === 'sort') S.sort = t.value;
+    else if (act === 'from') { S.from = t.value; if (S.to && S.to < S.from) S.to = S.from; }
+    else if (act === 'to') S.to = t.value;
+    else return;
+    S.page = 1; persist(); renderExplore();
+  });
+  root.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-act]');
+    if (b && root.contains(b) && b.tagName !== 'SELECT' && b.tagName !== 'INPUT') {
+      ev.stopPropagation();
+      var act = b.getAttribute('data-act'), val = b.getAttribute('data-val');
+      switch (act) {
+        case 'like': var e = BY_ID[val] || LIKES[val]; if (e) toggleLike(e); return;
+        case 'toggle-filters': ref('filters').classList.toggle('kc-collapsed'); return;
+        case 'date': S.date = val; if (val === 'custom' && !S.from) { S.from = TODAY; S.to = ymd(add(NOW, 7)); } break;
+        case 'genre':
+          if (!val) S.genres = [];
+          else { var i = S.genres.indexOf(val); if (i >= 0) S.genres.splice(i, 1); else S.genres.push(val); }
+          break;
+        case 'free': S.free = !S.free; break;
+        case 'io': S.io = val; break;
+        case 'more': S.page++; renderResults(); return;
+        case 'reset': S.q = ''; ref('q').value = ''; S.sido = S.sgg = S.age = S.io = ''; S.date = 'all'; S.genres = []; S.free = false; break;
+        case 'unset':
+          if (val === 'q') { S.q = ''; ref('q').value = ''; }
+          else if (val.indexOf('genre:') === 0) S.genres = S.genres.filter(function (g) { return g !== val.slice(6); });
+          else if (val === 'sido') { S.sido = ''; S.sgg = ''; }
+          else if (val === 'date') S.date = 'all';
+          else if (val === 'free') S.free = false;
+          else S[val] = '';
+          break;
+        case 'rail': var r = b.parentNode.querySelector('.kc-rail'); r.scrollBy({ left: +val * r.clientWidth * 0.9, behavior: 'smooth' }); return;
+        case 'cal': S.cal = new Date(S.cal.getFullYear(), S.cal.getMonth() + +val, 1); renderCalendar(); return;
+        case 'day': S.day = val; S.dayPage = 1; renderCalendar(); return;
+        case 'daymore': S.dayPage++; renderCalendar(); return;
+        case 'unplan':
+          var p = val.split('|'); PLANS = PLANS.filter(function (x) { return !(x.id === p[0] && x.date === p[1]); });
+          save('plans', PLANS); renderTabs(); renderCalendar(); toast('일정을 삭제했어요'); return;
+        case 'ics-all':
+          downloadIcs(PLANS.filter(function (x) { return x.date >= TODAY; }).map(function (x) { return { ev: x.ev, date: x.date }; }), 'my-culture-plans.ics'); return;
+        default: return;
+      }
+      S.page = 1; persist(); renderExplore();
+      return;
+    }
+    var tab = ev.target.closest('[data-tab]');
+    if (tab) { S.tab = tab.getAttribute('data-tab'); renderAll(); return; }
+    var open = ev.target.closest('[data-open]');
+    if (open) openDetail(open.getAttribute('data-open'));
+  });
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Escape' && modal) closeDetail();
+    if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.matches && ev.target.matches('#kc-app [data-open]')) { ev.preventDefault(); openDetail(ev.target.getAttribute('data-open')); }
+  });
+
+  /* ===================== 데이터 로드 ===================== */
+  function setData(list) {
+    DATA = list.filter(function (e) { return e && e.t && e.sd && e.ed && e.ed >= TODAY; });
+    BY_ID = {}; DATA.forEach(function (e) { BY_ID[e.id] = e; });
+    // 찜/일정 스냅샷을 최신 정보로 갱신
+    Object.keys(LIKES).forEach(function (id) { if (BY_ID[id]) LIKES[id] = snapshot(BY_ID[id]); });
+    save('likes', LIKES);
+  }
+  function showMeta() {
+    var u = ref('updated');
+    if (META && META.updated) {
+      var d = new Date(META.updated);
+      u.textContent = '전국 축제·공연·전시 ' + DATA.length.toLocaleString() + '건 · ' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ' 업데이트';
+    } else u.textContent = '전국 축제·공연·전시 ' + DATA.length.toLocaleString() + '건';
+    ref('banner').innerHTML = DEMO ? '<div class="kc-banner">지금 보이는 것은 <b>샘플 데이터</b>입니다. 실제 데이터를 쓰려면 위젯 코드의 DATA_URL 을 설정하세요.</div>' : '';
+  }
+  function start() {
+    renderShell(); renderAll();
+    var go = function () {
+      showMeta(); renderAll();
+      var m = location.hash.match(/kc=([^&]+)/);
+      if (m) openDetail(decodeURIComponent(m[1]));
+    };
+    if (!DATA_URL) { DEMO = true; setData(demoData()); go(); return; }
+    fetch(DATA_URL, { cache: 'no-cache' })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (j) { META = j; setData(j.events || []); go(); })
+      .catch(function (err) {
+        console.warn('[kc] 데이터 로드 실패', err);
+        ref('results').innerHTML = '<div class="kc-empty"><b>데이터를 불러오지 못했어요</b>잠시 후 다시 시도해 주세요.</div>';
+      });
+  }
+
+  /* ===================== 샘플 데이터 (DATA_URL 미설정 시) ===================== */
+  function demoData() {
+    var seed = 7; function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+    function pick(a) { return a[Math.floor(rnd() * a.length)]; }
+    var places = {
+      '서울': [['종로구', '세종문화회관 대극장'], ['송파구', '올림픽공원 88잔디마당'], ['서초구', '예술의전당 콘서트홀'], ['종로구', '대학로 아트원씨어터'], ['용산구', '국립중앙박물관'], ['영등포구', '여의도 한강공원']],
+      '부산': [['해운대구', '해운대해수욕장 일원'], ['중구', '부산시민회관'], ['수영구', '광안리해수욕장']],
+      '경기': [['수원시', '수원화성 행궁광장'], ['고양시', '고양아람누리 아람극장'], ['성남시', '성남아트센터']],
+      '강원': [['춘천시', '춘천 공지천 일원'], ['강릉시', '강릉아트센터']],
+      '전북': [['전주시', '전주 한옥마을 일원'], ['전주시', '한국소리문화의전당']],
+      '경북': [['경주시', '경주 보문관광단지'], ['안동시', '안동 탈춤공원']],
+      '제주': [['제주시', '제주아트센터'], ['서귀포시', '서귀포 칠십리 시공원']],
+      '대구': [['중구', '대구오페라하우스']], '광주': [['동구', '국립아시아문화전당']], '대전': [['서구', '대전예술의전당']], '인천': [['연수구', '송도 센트럴파크']]
+    };
+    var titles = {
+      festival: ['가을 빛 축제', '전통 등불 축제', '억새 꽃 축제', '로컬 푸드 페스타', '국화 축제', '야간 문화유산 축제', '불꽃 축제'],
+      concert: ['인디 뮤직 페스티벌', '재즈 나이트', '싱어송라이터 단독 콘서트', '어쿠스틱 라이브'],
+      musical: ['창작 뮤지컬 〈별을 걷는 밤〉', '뮤지컬 〈시간 여행자〉', '가족 뮤지컬 〈숲속 친구들〉'],
+      theater: ['연극 〈그 여름의 편지〉', '코미디 연극 〈옆집 사람들〉', '연극 〈오래된 정원〉'],
+      classic: ['교향악단 정기연주회', '피아노 리사이틀', '실내악 시리즈'],
+      gugak: ['국악 한마당', '판소리 완창 무대'],
+      dance: ['현대무용 갈라', '발레 〈호두까기 인형〉'],
+      exhibit: ['한국 근현대 회화전', '미디어아트 특별전', '사진전 〈도시의 계절〉'],
+      event: ['어린이 공예 체험', '가족 천체관측 교실', '전통 다도 체험'],
+      etc: ['마술 & 서커스 쇼', '독립영화 상영회']
+    };
+    var out = [];
+    for (var i = 0; i < 140; i++) {
+      var g = pick(Object.keys(titles)), sido = pick(Object.keys(places)), pl = pick(places[sido]);
+      var sd = add(NOW, Math.floor(rnd() * 70) - 25), len = g === 'exhibit' ? 30 + Math.floor(rnd() * 60) : g === 'festival' ? 2 + Math.floor(rnd() * 8) : Math.floor(rnd() * 20);
+      var free = g === 'festival' || g === 'event' ? rnd() < .75 : rnd() < .15;
+      var am = g === 'festival' || g === 'event' ? 0 : pick([0, 0, 5, 8, 13, 15]);
+      var t = pick(titles[g]);
+      out.push({
+        id: 'demo:' + i, src: 'demo', t: (g === 'festival' ? pl[0].replace(/[시군구]$/, '') + ' ' : '') + t, g: g,
+        sd: ymd(sd), ed: ymd(add(sd, len)), sido: sido, sgg: pl[0], pl: pl[1],
+        free: free, fee: free ? '무료' : pick(['전석 30,000원', 'R석 70,000원 / S석 50,000원', '일반 15,000원']),
+        age: am === 0 ? '전체관람가' : '만 ' + am + '세 이상', am: am,
+        io: /공원|일원|해수욕장|광장|마을|한옥|시공원/.test(pl[1]) ? 'out' : 'in', url: ''
+      });
+    }
+    return out;
+  }
+
+  start();
+})();
+</script>
+
+</body></html>
