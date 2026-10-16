@@ -80,6 +80,7 @@
 #kc-app .kc-more{display:block;margin:22px auto 4px;height:46px;padding:0 28px;border:1.5px solid var(--kc-line);border-radius:999px;font-weight:700;background:#fff}
 #kc-app .kc-empty{padding:50px 10px;text-align:center;color:var(--kc-sub)}
 #kc-app .kc-empty b{display:block;font-size:17px;color:var(--kc-text);margin-bottom:4px}
+#kc-app .kc-credit{margin-top:32px;padding-top:12px;border-top:1px solid var(--kc-line);font-size:11.5px;color:var(--kc-mute)}
 #kc-app .kc-loading{padding:60px 0;text-align:center;color:var(--kc-mute)}
 /* 캘린더 */
 #kc-app .kc-cal-head{display:flex;align-items:center;justify-content:space-between;margin:6px 0 10px}
@@ -299,7 +300,8 @@
         '<div data-ref="results"></div>' +
       '</div>' +
       '<div data-panel="calendar" hidden></div>' +
-      '<div data-panel="likes" hidden></div>';
+      '<div data-panel="likes" hidden></div>' +
+      '<p class="kc-credit">데이터 출처: 한국관광공사 TourAPI · (재)예술경영지원센터 공연예술통합전산망(www.kopis.or.kr) · 서울 열린데이터광장</p>';
     if (window.matchMedia && window.matchMedia('(max-width:768px)').matches) ref('filters').classList.add('kc-collapsed');
     ref('q').value = S.q;
   }
